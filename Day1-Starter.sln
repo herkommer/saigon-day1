@@ -1,0 +1,54 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Step1-StaticAPI", "Step1-StaticAPI\Step1-StaticAPI.csproj", "{2B4FA6D7-9891-1C37-FF85-53358BDA8BED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Step2-AddMLNet", "Step2-AddMLNet\Step2-AddMLNet.csproj", "{0F354E43-B378-B6CF-B99A-483AC14E8459}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Step3-AddLogging", "Step3-AddLogging\Step3-AddLogging.csproj", "{830AA825-20D2-FCC5-38ED-F9003929C757}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Step4-AddOpenTelemetry", "Step4-AddOpenTelemetry\Step4-AddOpenTelemetry.csproj", "{974F2B98-E3C4-37FD-8E53-3824499C6F48}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Step5-ObservationStorage", "Step5-ObservationStorage\Step5-ObservationStorage.csproj", "{559E3C90-AC29-9443-4598-2424B133AB2D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Step6-CompleteWithRetraining", "Step6-CompleteWithRetraining\Step6-CompleteWithRetraining.csproj", "{F4E09C14-74C8-9FA0-E3F8-3E7CD5354E0A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2B4FA6D7-9891-1C37-FF85-53358BDA8BED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B4FA6D7-9891-1C37-FF85-53358BDA8BED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B4FA6D7-9891-1C37-FF85-53358BDA8BED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B4FA6D7-9891-1C37-FF85-53358BDA8BED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F354E43-B378-B6CF-B99A-483AC14E8459}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F354E43-B378-B6CF-B99A-483AC14E8459}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F354E43-B378-B6CF-B99A-483AC14E8459}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F354E43-B378-B6CF-B99A-483AC14E8459}.Release|Any CPU.Build.0 = Release|Any CPU
+		{830AA825-20D2-FCC5-38ED-F9003929C757}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{830AA825-20D2-FCC5-38ED-F9003929C757}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{830AA825-20D2-FCC5-38ED-F9003929C757}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{830AA825-20D2-FCC5-38ED-F9003929C757}.Release|Any CPU.Build.0 = Release|Any CPU
+		{974F2B98-E3C4-37FD-8E53-3824499C6F48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{974F2B98-E3C4-37FD-8E53-3824499C6F48}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{974F2B98-E3C4-37FD-8E53-3824499C6F48}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{974F2B98-E3C4-37FD-8E53-3824499C6F48}.Release|Any CPU.Build.0 = Release|Any CPU
+		{559E3C90-AC29-9443-4598-2424B133AB2D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{559E3C90-AC29-9443-4598-2424B133AB2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{559E3C90-AC29-9443-4598-2424B133AB2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{559E3C90-AC29-9443-4598-2424B133AB2D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4E09C14-74C8-9FA0-E3F8-3E7CD5354E0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4E09C14-74C8-9FA0-E3F8-3E7CD5354E0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4E09C14-74C8-9FA0-E3F8-3E7CD5354E0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4E09C14-74C8-9FA0-E3F8-3E7CD5354E0A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1AE5463E-44AF-49B1-8F59-35C89CCCE372}
+	EndGlobalSection
+EndGlobal
