@@ -96,6 +96,8 @@ app.MapGet("/predict/{value:float}", (float value, ObservationStore store) =>
         observation.Id
     );
 
+    activity.Stop();
+
     return new
     {
         observationId = observation.Id,
