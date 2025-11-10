@@ -16,7 +16,7 @@ builder.Host.UseSerilog();
 // builder.Services.AddOpenTelemetry()
 //     .ConfigureResource(r => r.AddService("AlertPredictor"))
 //     .WithTracing(tracing => tracing...);
-builder.Services.AddOpenTelemetry().ConfigureResource(r => r.AddService("AlertPredicator")).WithTracing(tracing => tracing.AddAspNetCoreInstrumentation().AddSource("AlertPredicator").AddConsoleExporter());
+builder.Services.AddOpenTelemetry().ConfigureResource(r => r.AddService("AlertPredictor")).WithTracing(tracing => tracing.AddAspNetCoreInstrumentation().AddSource("AlertPredictor").AddConsoleExporter());
 
 var app = builder.Build();
 var mlContext = new MLContext();
@@ -64,7 +64,7 @@ var activitySource = new ActivitySource("AlertPredictor");
 
 app.MapGet("/predict/{value:float}", (float value) =>
 {
-    using var activity = activitySource.StartActivity("PredictAlert", ActivityKind.Internal);
+    var activity = activitySource.StartActivity("PredictAlert", ActivityKind.Internal);
     activity?.SetTag("input.value", value);
 
     var input = new SignalData { Value = value };
@@ -80,12 +80,15 @@ app.MapGet("/predict/{value:float}", (float value) =>
         prediction.Probability
     );
 
+    activity?.Stop();
+
     return new
     {
         value,
         shouldAlert = prediction.ShouldAlert,
         probability = prediction.Probability
     };
+
 });
 
 app.Run();
