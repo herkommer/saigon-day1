@@ -4,6 +4,7 @@ using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using System.Diagnostics;
 using Microsoft.ML.Data;
+using System.Collections.Concurrent;
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
