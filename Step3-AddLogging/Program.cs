@@ -4,8 +4,9 @@ using Microsoft.ML.Data;
 
 // TODO: Configure Serilog with Console output
 // Log.Logger = new LoggerConfiguration()...
-Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateLogger();
-
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}")
+    .CreateLogger();
 
 var builder = WebApplication.CreateBuilder(args);
 // TODO: Add UseSerilog() to builder.Host
@@ -19,12 +20,20 @@ var mlContext = new MLContext();
 var trainingData = new[]
 {
     new SignalData{ Value = 0.1f, ShouldAlert = false},
+    new SignalData{ Value = 0.15f, ShouldAlert = false},
     new SignalData{ Value = 0.2f, ShouldAlert = false},
+    new SignalData{ Value = 0.25f, ShouldAlert = false},
     new SignalData{ Value = 0.3f, ShouldAlert = false},
+    new SignalData{ Value = 0.35f, ShouldAlert = false},
     new SignalData{ Value = 0.4f, ShouldAlert = false},
+    new SignalData{ Value = 0.45f, ShouldAlert = false},
+    new SignalData{ Value = 0.55f, ShouldAlert = true},
     new SignalData{ Value = 0.6f, ShouldAlert = true},
+    new SignalData{ Value = 0.65f, ShouldAlert = true},
     new SignalData{ Value = 0.7f, ShouldAlert = true},
+    new SignalData{ Value = 0.75f, ShouldAlert = true},
     new SignalData{ Value = 0.8f, ShouldAlert = true},
+    new SignalData{ Value = 0.85f, ShouldAlert = true},
     new SignalData{ Value = 0.9f, ShouldAlert = true},
 };
 
