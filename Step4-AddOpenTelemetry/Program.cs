@@ -106,6 +106,52 @@ app.MapGet("/predict/{value:float}", (float value, ObservationStore store) =>
 
 });
 
+app.MapPost("/label/{observationId:guid}", (Guid observationId, bool actualAlert, ObservationStore store) =>
+{
+    var observation = store.GetById(observationId);
+    if (observation == null)
+    {
+        return Results.NotFound(new { error = "Observation not found" });
+    }
+
+    if (observation.ActualAlert.HasValue)
+    {
+        return Results.BadRequest(new { error = "Observation already labeled" });
+    }
+
+    observation.ActualAlert = actualAlert;
+
+    Log.Information(
+        "Labeled observation: Id={ObservationId}, Predicted={Predicted}, Actual={Actual}, Correct={Correct}",
+        observationId,
+        observation.PredictedAlert,
+        actualAlert,
+        observation.PredictedAlert == actualAlert
+    );
+
+    return Results.Ok(new
+    {
+        observationId,
+        predicted = observation.PredictedAlert,
+        actual = actualAlert,
+        wasCorrect = observation.PredictedAlert == actualAlert
+    });
+});
+
+app.MapGet("/observations", (ObservationStore store) =>
+{
+    var observations = store.GetAll();
+    var labeled = observations.Where(o => o.ActualAlert.HasValue).ToList();
+
+    return new
+    {
+        total = observations.Count,
+        labeled = labeled.Count,
+        unlabeled = observations.Count - labeled.Count,
+        observations = observations.OrderByDescending(o => o.Timestamp).Take(10)
+    };
+});
+
 app.Run();
 
 public class SignalData
