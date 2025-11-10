@@ -30,7 +30,9 @@ var trainingData = new[]
 
 var dataView = mlContext.Data.LoadFromEnumerable(trainingData);
 
-var pipeline = mlContext.Transforms.Concatenate("Features", nameof(SignalData.Value)).Append(mlContext.BinaryClassification.Trainers.SdcaLogisticRegression(labelColumnName: nameof(SignalData.ShouldAlert), featureColumnName: "Features"));
+var pipeline = mlContext.Transforms.Concatenate("Features", nameof(SignalData.Value))
+    .Append(mlContext.BinaryClassification.Trainers.LbfgsLogisticRegression(
+        labelColumnName: nameof(SignalData.ShouldAlert)));
 
 var model = pipeline.Fit(dataView);
 
@@ -44,7 +46,7 @@ app.MapGet("/predict/{value:float}", (float value) =>
     var prediction = predictionEngine.Predict(input);
 
     //Add Logging
-    Log.Information("Prediction: Value={Value}, Alert={Alert}, Prability={Probability:F2}",
+    Log.Information("Prediction: Value={Value}, Alert={Alert}, Probability={Probability:F2}",
     value,
     prediction.ShouldAlert,
     prediction.Probability
@@ -61,9 +63,7 @@ app.MapGet("/predict/{value:float}", (float value) =>
 app.Run();
 public class SignalData
 {
-    [LoadColumn(0)]
     public float Value { get; set; }
-    [LoadColumn(1)]
     public bool ShouldAlert { get; set; }
 }
 public class AlertPrediction

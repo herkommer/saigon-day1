@@ -13,18 +13,28 @@ var mlContext = new MLContext();
 var trainingData = new[]
 {
     new SignalData{ Value = 0.1f, ShouldAlert = false},
+    new SignalData{ Value = 0.15f, ShouldAlert = false},
     new SignalData{ Value = 0.2f, ShouldAlert = false},
+    new SignalData{ Value = 0.25f, ShouldAlert = false},
     new SignalData{ Value = 0.3f, ShouldAlert = false},
+    new SignalData{ Value = 0.35f, ShouldAlert = false},
     new SignalData{ Value = 0.4f, ShouldAlert = false},
+    new SignalData{ Value = 0.45f, ShouldAlert = false},
+    new SignalData{ Value = 0.55f, ShouldAlert = true},
     new SignalData{ Value = 0.6f, ShouldAlert = true},
+    new SignalData{ Value = 0.65f, ShouldAlert = true},
     new SignalData{ Value = 0.7f, ShouldAlert = true},
+    new SignalData{ Value = 0.75f, ShouldAlert = true},
     new SignalData{ Value = 0.8f, ShouldAlert = true},
+    new SignalData{ Value = 0.85f, ShouldAlert = true},
     new SignalData{ Value = 0.9f, ShouldAlert = true},
 };
 
 var dataView = mlContext.Data.LoadFromEnumerable(trainingData);
 
-var pipeline = mlContext.Transforms.Concatenate("Features", nameof(SignalData.Value)).Append(mlContext.BinaryClassification.Trainers.SdcaLogisticRegression(labelColumnName: nameof(SignalData.ShouldAlert), featureColumnName: "Features"));
+var pipeline = mlContext.Transforms.Concatenate("Features", nameof(SignalData.Value))
+    .Append(mlContext.BinaryClassification.Trainers.LbfgsLogisticRegression(
+        labelColumnName: nameof(SignalData.ShouldAlert)));
 
 var model = pipeline.Fit(dataView);
 
@@ -49,15 +59,15 @@ app.Run();
 
 public class SignalData
 {
-    [LoadColumn(0)]
     public float Value { get; set; }
-    [LoadColumn(1)]
     public bool ShouldAlert { get; set; }
 }
+
 public class AlertPrediction
 {
     [ColumnName("PredictedLabel")]
     public bool ShouldAlert { get; set; }
+
     [ColumnName("Probability")]
     public float Probability { get; set; }
-};
+}
