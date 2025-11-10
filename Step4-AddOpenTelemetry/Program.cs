@@ -18,6 +18,8 @@ builder.Host.UseSerilog();
 //     .WithTracing(tracing => tracing...);
 builder.Services.AddOpenTelemetry().ConfigureResource(r => r.AddService("AlertPredictor")).WithTracing(tracing => tracing.AddAspNetCoreInstrumentation().AddSource("AlertPredictor").AddConsoleExporter());
 
+builder.Services.AddSingleton<ObservationStore>();
+
 var app = builder.Build();
 var mlContext = new MLContext();
 
@@ -62,7 +64,7 @@ var predictionEngine = mlContext.Model.CreatePredictionEngine<SignalData, AlertP
 
 var activitySource = new ActivitySource("AlertPredictor");
 
-app.MapGet("/predict/{value:float}", (float value) =>
+app.MapGet("/predict/{value:float}", (float value, ObservationStore store) =>
 {
     var activity = activitySource.StartActivity("PredictAlert", ActivityKind.Internal);
     activity?.SetTag("input.value", value);
@@ -70,20 +72,32 @@ app.MapGet("/predict/{value:float}", (float value) =>
     var input = new SignalData { Value = value };
     var prediction = predictionEngine.Predict(input);
 
+    // Store observation for later labeling
+    var observation = new Observation
+    {
+        Id = Guid.NewGuid(),
+        Value = value,
+        PredictedAlert = prediction.ShouldAlert,
+        Probability = prediction.Probability,
+        Timestamp = DateTime.UtcNow
+    };
+    store.Add(observation);
+
     activity?.SetTag("prediction.alert", prediction.ShouldAlert);
     activity?.SetTag("prediction.probability", prediction.Probability);
+    activity?.SetTag("observation.id", observation.Id);
 
     Log.Information(
-        "Prediction: Value={Value}, Alert={Alert}, Probability={Probability:F2}",
+        "Prediction: Value={Value}, Alert={Alert}, Probability={Probability:F2}, ObservationId={ObservationId}",
         value,
         prediction.ShouldAlert,
-        prediction.Probability
+        prediction.Probability,
+        observation.Id
     );
-
-    activity?.Stop();
 
     return new
     {
+        observationId = observation.Id,
         value,
         shouldAlert = prediction.ShouldAlert,
         probability = prediction.Probability
@@ -108,3 +122,39 @@ public class AlertPrediction
     [ColumnName("Probability")]
     public float Probability { get; set; }
 }
+
+public class Observation
+{
+    public Guid Id { get; set; }
+    public float Value { get; set; }
+    public bool PredictedAlert { get; set; }
+    public float Probability { get; set; }
+    public DateTime Timestamp { get; set; }
+    public bool? ActualAlert { get; set; }  // null until labeled
+}
+
+public class ObservationStore
+{
+    private readonly ConcurrentBag<Observation> _observations = new();
+
+    public void Add(Observation observation)
+    {
+        _observations.Add(observation);
+    }
+
+    public Observation? GetById(Guid id)
+    {
+        return _observations.FirstOrDefault(o => o.Id == id);
+    }
+
+    public List<Observation> GetAll()
+    {
+        return _observations.ToList();
+    }
+
+    public List<Observation> GetLabeled()
+    {
+        return _observations.Where(o => o.ActualAlert.HasValue).ToList();
+    }
+}
+
